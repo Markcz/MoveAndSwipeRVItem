@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/one_span"
+        android:title="1列"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/two_span"
+        android:title="2列"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/three_span"
+        android:title="3列"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/four_span"
+        android:title="4列"
+        app:showAsAction="never"
+        />
+
+</menu>
