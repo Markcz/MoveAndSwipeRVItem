@@ -48,29 +48,29 @@ public class MainActivity extends AppCompatActivity {
     private ItemTouchHelper.Callback mCallBack = new ItemTouchHelper.Callback() {
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            int moveFlag,swipeFlag;
+            int moveFlag, swipeFlag;
             RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
             swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-            if (manager instanceof StaggeredGridLayoutManager){
-               int span = ((StaggeredGridLayoutManager) manager).getSpanCount();
-               if (span >= 2){
-                   moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-               }else {
-                   moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
-               }
-            }else if (manager instanceof GridLayoutManager){
-                int span = ((GridLayoutManager) manager).getSpanCount();
-                if (span >= 2){
+            if (manager instanceof StaggeredGridLayoutManager) {
+                int span = ((StaggeredGridLayoutManager) manager).getSpanCount();
+                if (span >= 2) {
                     moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-                }else {
+                } else {
                     moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
                 }
-            }else {
+            } else if (manager instanceof GridLayoutManager) {
+                int span = ((GridLayoutManager) manager).getSpanCount();
+                if (span >= 2) {
+                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                } else {
+                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
+                }
+            } else {
                 int direction = manager.getLayoutDirection();
-                if (direction == LinearLayoutManager.HORIZONTAL){
+                if (direction == LinearLayoutManager.HORIZONTAL) {
                     moveFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                     swipeFlag = 0;
-                }else {
+                } else {
                     moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
                 }
             }
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             int dragPosition = viewHolder.getAdapterPosition();
             int targetPosition = target.getAdapterPosition();
-            Collections.swap(mModels,dragPosition,targetPosition);
-            mAdapter.notifyItemMoved(dragPosition,targetPosition);
+            Collections.swap(mModels, dragPosition, targetPosition);
+            mAdapter.notifyItemMoved(dragPosition, targetPosition);
             return true;
         }
 
@@ -121,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
                                 , Manifest.permission.READ_EXTERNAL_STORAGE},
                         STORAGE_REQUEST_CODE
                 );
-                Log.e(TAG,"check 1");
+                Log.e(TAG, "check 1");
             } else {
                 getSupportLoaderManager().initLoader(ID_EXTERNAL, null, mLoaderCallbacks);
-                Log.e(TAG,"check 2");
+                Log.e(TAG, "check 2");
             }
         } else {
-            Log.e(TAG,"check 3");
+            Log.e(TAG, "check 3");
             getSupportLoaderManager().initLoader(ID_EXTERNAL, null, mLoaderCallbacks);
         }
 
@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         //mRecyclerView.setLayoutManager(new GridLayoutManager(this,GridLayoutManager.VERTICAL,1,false));
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-                manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
         mRecyclerView.setLayoutManager(manager);
 
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         });
         mModels = new ArrayList<>();
 
-        mAdapter = new ItemAdapter(this, mModels,2);
+        mAdapter = new ItemAdapter(this, mModels, 2);
         mRecyclerView.setAdapter(mAdapter);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
@@ -214,21 +214,21 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(Loader loader, Cursor data) {
-            Log.e(TAG,"onLoadFinished 1");
+            Log.e(TAG, "onLoadFinished 1");
             if (loader != null && data != null) {
-                Log.e(TAG,"onLoadFinished 2");
+                Log.e(TAG, "onLoadFinished 2");
                 while (data.moveToNext()) {
                     String path = data.getString(data.getColumnIndexOrThrow(IMAGE_COLUMNS[1]));
                     String name = data.getString(data.getColumnIndexOrThrow(IMAGE_COLUMNS[2]));
                     String title = data.getString(data.getColumnIndexOrThrow(IMAGE_COLUMNS[3]));
                     int width = data.getInt(data.getColumnIndexOrThrow(IMAGE_COLUMNS[4]));
                     int height = data.getInt(data.getColumnIndexOrThrow(IMAGE_COLUMNS[5]));
-                    ImageModel model = new ImageModel(width,height,path, name, title);
+                    ImageModel model = new ImageModel(width, height, path, name, title);
                     mModels.add(model);
-                    Log.e(TAG,"onLoadFinished W : " + width + " H : " + height);
-                    Log.e(TAG,"onLoadFinished 3");
+                    Log.e(TAG, "onLoadFinished W : " + width + " H : " + height);
+                    Log.e(TAG, "onLoadFinished 3");
                 }
-                Log.e(TAG,"onLoadFinished 4");
+                Log.e(TAG, "onLoadFinished 4");
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -242,45 +242,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_REQUEST_CODE){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getSupportLoaderManager().initLoader(ID_EXTERNAL,null,mLoaderCallbacks);
+        if (requestCode == STORAGE_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getSupportLoaderManager().initLoader(ID_EXTERNAL, null, mLoaderCallbacks);
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.one_span:
-                mAdapter = new ItemAdapter(this,mModels,1);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+                mAdapter = new ItemAdapter(this, mModels, 1);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
                 return true;
 
             case R.id.two_span:
-                mAdapter = new ItemAdapter(this,mModels,2);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                mAdapter = new ItemAdapter(this, mModels, 2);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
                 return true;
 
             case R.id.three_span:
-                mAdapter = new ItemAdapter(this,mModels,3);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+                mAdapter = new ItemAdapter(this, mModels, 3);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
                 return true;
 
 
             case R.id.four_span:
-                mAdapter = new ItemAdapter(this,mModels,4);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+                mAdapter = new ItemAdapter(this, mModels, 4);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
                 return true;
 
