@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.exception;
 
 /**
  * Created by chenzhen on 2018/8/17.

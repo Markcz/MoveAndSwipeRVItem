@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.image;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -7,6 +7,11 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.mark.moveandswipervitem.chche.DiskLruCacheManager;
+import com.mark.moveandswipervitem.chche.LruCacheManager;
+
+import java.io.InputStream;
 
 /**
  * Created by mark on 18-8-12.
@@ -74,7 +79,7 @@ public class ImageLoader {
             if (bitmap != null){
                 RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(imageView.getResources(),bitmap);
                 if (drawable != null){
-                    drawable.setCornerRadius(30);
+                    drawable.setCornerRadius(20);
                     imageView.setImageDrawable(drawable);
                 }
             }else {
@@ -86,7 +91,7 @@ public class ImageLoader {
                             LruCacheManager.getInstance().put(path,origin);
                             final RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory
                                     .create(imageView.getResources(),origin);
-                            drawable.setCornerRadius(30);
+                            drawable.setCornerRadius(20);
                             if (drawable != null){
                                 mHandler.post(new Runnable() {
                                     @Override
@@ -117,7 +122,7 @@ public class ImageLoader {
                 if (bitmap != null){
                     RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(imageView.getResources(),bitmap);
                     if (drawable != null){
-                        drawable.setCornerRadius(30);
+                        drawable.setCornerRadius(20);
                         imageView.setImageDrawable(drawable);
                         Log.e(TAG,"displayRoundImageSync -- LruCache");
                     }
@@ -127,7 +132,7 @@ public class ImageLoader {
                         LruCacheManager.getInstance().put(path,origin);
                         final RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory
                                 .create(imageView.getResources(),origin);
-                        drawable.setCornerRadius(30);
+                        drawable.setCornerRadius(20);
                         if (drawable != null){
                             imageView.setImageDrawable(drawable);
                             Log.e(TAG,"displayRoundImageSync -- Origin");
@@ -154,7 +159,7 @@ public class ImageLoader {
                     Log.e(TAG,"displayRoundImageSync -- LruCache");
                 }
             }else {
-                bitmap = DiskLruCacheManager.getInstance().get(url);
+                InputStream is = DiskLruCacheManager.getInstance().get(url);
             }
         }
     }

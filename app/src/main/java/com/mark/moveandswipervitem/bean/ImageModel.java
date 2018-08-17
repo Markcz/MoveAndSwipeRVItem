@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.bean;
 
 /**
  * Created by mark on 18-8-11.

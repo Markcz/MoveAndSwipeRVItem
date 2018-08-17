@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;

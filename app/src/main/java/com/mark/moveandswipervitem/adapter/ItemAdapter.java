@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.mark.moveandswipervitem.image.ImageLoader;
+import com.mark.moveandswipervitem.bean.ImageModel;
+import com.mark.moveandswipervitem.R;
+
 import java.util.List;
 
 /**

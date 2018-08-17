@@ -1,9 +1,11 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.chche;
 
 
 import android.app.Application;
 import android.os.Environment;
 import com.jakewharton.disklrucache.DiskLruCache;
+import com.mark.moveandswipervitem.exception.NotInitializeException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +87,7 @@ public class DiskLruCacheManager {
      * @param key
      * @return
      */
-    private InputStream get(String key){
+    public InputStream get(String key){
         if (key != null){
             try {
                 String hashKey = hashKeyForDisk(key);

@@ -1,6 +1,4 @@
-package com.mark.moveandswipervitem;
-
-import android.graphics.Bitmap;
+package com.mark.moveandswipervitem.image;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

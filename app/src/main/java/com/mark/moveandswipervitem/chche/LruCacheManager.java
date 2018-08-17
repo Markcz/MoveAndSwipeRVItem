@@ -1,4 +1,4 @@
-package com.mark.moveandswipervitem;
+package com.mark.moveandswipervitem.chche;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;

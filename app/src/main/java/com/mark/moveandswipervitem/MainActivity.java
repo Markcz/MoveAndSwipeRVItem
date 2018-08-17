@@ -23,6 +23,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.mark.moveandswipervitem.adapter.ItemAdapter;
+import com.mark.moveandswipervitem.bean.ImageModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,28 +50,28 @@ public class MainActivity extends AppCompatActivity {
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             int moveFlag,swipeFlag;
             RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
-            swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT; //可左右滑动
+            swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             if (manager instanceof StaggeredGridLayoutManager){
                int span = ((StaggeredGridLayoutManager) manager).getSpanCount();
                if (span >= 2){
                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                }else {
-                   moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP; //可上下移动
+                   moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
                }
             }else if (manager instanceof GridLayoutManager){
                 int span = ((GridLayoutManager) manager).getSpanCount();
                 if (span >= 2){
                     moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                 }else {
-                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP; //可上下移动
+                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
                 }
             }else {
                 int direction = manager.getLayoutDirection();
                 if (direction == LinearLayoutManager.HORIZONTAL){
-                    moveFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT; //可左右滑动
-                    swipeFlag = 0; //可左右滑动
+                    moveFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                    swipeFlag = 0;
                 }else {
-                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP; //可上下移动
+                    moveFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;
                 }
             }
             return makeMovementFlags(moveFlag, swipeFlag);
@@ -135,7 +139,9 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         //mRecyclerView.setLayoutManager(new GridLayoutManager(this,GridLayoutManager.VERTICAL,1,false));
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+                manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        mRecyclerView.setLayoutManager(manager);
 
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
