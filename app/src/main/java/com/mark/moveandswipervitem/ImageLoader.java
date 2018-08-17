@@ -26,6 +26,13 @@ public class ImageLoader {
         }
     }
 
+    /***
+     * 显示本地图片
+     * @param path
+     * @param imageView
+     * @param w
+     * @param h
+     */
     public static void displayImageAsync(final String path, final ImageView imageView, final int w, final int h){
         if (path != null && imageView != null){
             final Bitmap bitmap = LruCacheManager.getInstance().get(path);
@@ -53,6 +60,14 @@ public class ImageLoader {
         }
     }
 
+    /***
+     * 开启线程池解码
+     * 显示本地图片 圆角化处理
+     * @param path
+     * @param imageView
+     * @param w
+     * @param h
+     */
     public static void displayRoundImageAsync(final String path, final ImageView imageView, final int w, final int h){
         if (path != null && imageView != null){
             Bitmap bitmap = LruCacheManager.getInstance().get(path);
@@ -89,6 +104,13 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * 显示本地图片 圆角化处理
+     * @param path
+     * @param imageView
+     * @param w
+     * @param h
+     */
     public static void displayRoundImageSync(String path, ImageView imageView, int w, int h){
             if (path != null && imageView != null){
                 Bitmap bitmap = LruCacheManager.getInstance().get(path);
@@ -114,4 +136,26 @@ public class ImageLoader {
                 }
             }
         }
+
+
+    /**
+     * 显示网络图片
+     * @param url
+     * @param imageView
+     */
+    public static void diaplayImageWithNet(String url,ImageView imageView){
+        if (url != null && imageView != null){
+            Bitmap bitmap = LruCacheManager.getInstance().get(url);
+            if (bitmap != null){
+                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(imageView.getResources(),bitmap);
+                if (drawable != null){
+                    drawable.setCornerRadius(30);
+                    imageView.setImageDrawable(drawable);
+                    Log.e(TAG,"displayRoundImageSync -- LruCache");
+                }
+            }else {
+                bitmap = DiskLruCacheManager.getInstance().get(url);
+            }
+        }
+    }
 }
