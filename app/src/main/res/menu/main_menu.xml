@@ -2,6 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/net"
+        android:title="网络图"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/local"
+        android:title="本地图"
+        app:showAsAction="never"
+        />
+
 
     <item
         android:id="@+id/one_span"

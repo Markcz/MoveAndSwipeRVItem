@@ -23,11 +23,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.mark.moveandswipervitem.adapter.ItemAdapter;
+import com.mark.moveandswipervitem.adapter.ItemNetAdapter;
 import com.mark.moveandswipervitem.bean.ImageModel;
-
+import com.mark.moveandswipervitem.constant.BingPicConstant;
+import com.mark.moveandswipervitem.image.ImageLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     ItemTouchHelper mItemTouchHelper;
     RecyclerView mRecyclerView;
     ItemAdapter mAdapter;
+    ItemNetAdapter mNetAdapter;
     List<ImageModel> mModels;
+    List<String> mUrls;
 
     /**
      * 拖拽滑动回调
@@ -81,16 +85,26 @@ public class MainActivity extends AppCompatActivity {
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             int dragPosition = viewHolder.getAdapterPosition();
             int targetPosition = target.getAdapterPosition();
-            Collections.swap(mModels, dragPosition, targetPosition);
-            mAdapter.notifyItemMoved(dragPosition, targetPosition);
+            if (isNet){
+                Collections.swap(mUrls, dragPosition, targetPosition);
+                mNetAdapter.notifyItemMoved(dragPosition, targetPosition);
+            }else {
+                Collections.swap(mModels, dragPosition, targetPosition);
+                mAdapter.notifyItemMoved(dragPosition, targetPosition);
+            }
             return true;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            mAdapter.notifyItemRemoved(position);
-            mModels.remove(position);
+            if (isNet){
+                mNetAdapter.notifyItemRemoved(position);
+                mUrls.remove(position);
+            }else {
+                mAdapter.notifyItemRemoved(position);
+                mModels.remove(position);
+            }
         }
 
         @Override
@@ -152,8 +166,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mModels = new ArrayList<>();
+        mUrls = Arrays.asList(BingPicConstant.BING_IMAGE_URLS);
 
         mAdapter = new ItemAdapter(this, mModels, 2);
+
         mRecyclerView.setAdapter(mAdapter);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
@@ -229,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "onLoadFinished 3");
                 }
                 Log.e(TAG, "onLoadFinished 4");
-                mAdapter.notifyDataSetChanged();
             }
         }
 
@@ -255,33 +270,75 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    boolean isNet = false;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.one_span:
-                mAdapter = new ItemAdapter(this, mModels, 1);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-                mRecyclerView.setAdapter(mAdapter);
-                return true;
 
-            case R.id.two_span:
+            case R.id.net:
+                mNetAdapter = new ItemNetAdapter(this, mUrls, 2);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                mRecyclerView.setAdapter(mNetAdapter);
+                isNet = true;
+                break;
+
+
+            case R.id.local:
                 mAdapter = new ItemAdapter(this, mModels, 2);
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
+                isNet = false;
+                break;
+
+
+            case R.id.one_span:
+                if (isNet){
+                    mNetAdapter = new ItemNetAdapter(this, mUrls, 1);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mNetAdapter);
+                }else {
+                    mAdapter = new ItemAdapter(this, mModels, 1);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+                return true;
+
+            case R.id.two_span:
+                if (isNet){
+                    mNetAdapter = new ItemNetAdapter(this, mUrls, 2);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mNetAdapter);
+                }else {
+                    mAdapter = new ItemAdapter(this, mModels, 2);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter);
+                }
                 return true;
 
             case R.id.three_span:
-                mAdapter = new ItemAdapter(this, mModels, 3);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-                mRecyclerView.setAdapter(mAdapter);
+                if (isNet){
+                    mNetAdapter = new ItemNetAdapter(this, mUrls, 3);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mNetAdapter);
+                }else {
+                    mAdapter = new ItemAdapter(this, mModels, 3);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+
                 return true;
 
-
             case R.id.four_span:
-                mAdapter = new ItemAdapter(this, mModels, 4);
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
-                mRecyclerView.setAdapter(mAdapter);
+                if (isNet){
+                    mNetAdapter = new ItemNetAdapter(this, mUrls, 4);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mNetAdapter);
+                }else {
+                    mAdapter = new ItemAdapter(this, mModels, 4);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter);
+                }
                 return true;
 
         }
@@ -289,4 +346,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImageLoader.flush();
+    }
 }

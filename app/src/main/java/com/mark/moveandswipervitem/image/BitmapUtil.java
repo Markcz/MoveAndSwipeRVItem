@@ -1,10 +1,11 @@
 package com.mark.moveandswipervitem.image;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -13,7 +14,7 @@ import java.io.InputStream;
 
 public class BitmapUtil {
 
-    static final String TAG = "BitmapUtil";
+    static final String TAG = "BitmapUtil  -- ";
 
 
     /***
@@ -40,9 +41,43 @@ public class BitmapUtil {
     // TODO: 2018/8/17 待实现
     public static Bitmap decodeStream(InputStream is, int targetWidth, int targetHeight){
         if (is == null){
+            throw new NullPointerException(TAG + "====传入的InputStream不能为null");
+        }
+        BufferedInputStream bis;
+        ByteArrayOutputStream baos;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+        bis = new BufferedInputStream(is);
+        baos = new ByteArrayOutputStream();
+
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            while ((len = bis.read(buffer, 0, buffer.length)) > 0) {
+                baos.write(buffer, 0, len);
+            }
+            byte[] imageData = baos.toByteArray();
+            BitmapFactory.decodeByteArray(imageData,0,imageData.length,options);
+            options.inSampleSize = calculateSampleSize(options, targetWidth, targetHeight);
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeByteArray(imageData,0,imageData.length,options);
+        }catch (IOException e){
+            Log.e(TAG,e.getMessage());
+        }finally {
+            try{
+                if (bis != null){
+                    bis.close();
+                }
+                if (baos != null){
+                    baos.close();
+                }
+            }catch (Exception e){
+
+            }
 
         }
-
         return null;
     }
 

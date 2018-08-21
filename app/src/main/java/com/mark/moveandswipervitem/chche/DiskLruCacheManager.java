@@ -4,14 +4,11 @@ package com.mark.moveandswipervitem.chche;
 import android.app.Application;
 import android.os.Environment;
 import com.jakewharton.disklrucache.DiskLruCache;
+import com.mark.moveandswipervitem.BuildConfig;
 import com.mark.moveandswipervitem.exception.NotInitializeException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by chenzhen on 2018/8/13.
@@ -43,7 +40,7 @@ public class DiskLruCacheManager {
 
     private DiskLruCacheManager (){
         File cacheDir = getCacheDir(mApp);
-        int versionCode = mApp.getPackageManager().getPackageArchiveInfo(mApp.getPackageName(),0).versionCode;
+        int versionCode = BuildConfig.VERSION_CODE;
         try {
             mDiskLruCache = DiskLruCache.open(cacheDir,versionCode,1,MAX_SIZE);
         } catch (IOException e) {
@@ -64,36 +61,12 @@ public class DiskLruCacheManager {
      * 存储文件
      * @param key
      */
-    public void put(String key){
+    public DiskLruCache.Editor put(String key){
         if (key != null){
             try {
-                String hashKey = hashKeyForDisk(key);
-                DiskLruCache.Editor editor = mDiskLruCache.edit(hashKey);
-                OutputStream os = editor.newOutputStream(0);
-                save(key,os);
-                editor.commit();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void save(String key, OutputStream os) {
-        // TODO: 2018/8/17 将文件存入本地缓存 待实现
-    }
-
-    /***
-     *
-     * @param key
-     * @return
-     */
-    public InputStream get(String key){
-        if (key != null){
-            try {
-                String hashKey = hashKeyForDisk(key);
-                DiskLruCache.Snapshot snapshot = mDiskLruCache.get(hashKey);
-                if (snapshot != null){
-                    return snapshot.getInputStream(0);
+                DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                if (editor != null){
+                    return editor;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -102,30 +75,36 @@ public class DiskLruCacheManager {
         return null;
     }
 
-
-
-    public String hashKeyForDisk(String key) {
-        String cacheKey;
-        try {
-            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes());
-            cacheKey = bytesToHexString(mDigest.digest());
-        } catch (NoSuchAlgorithmException e) {
-            cacheKey = String.valueOf(key.hashCode());
+    /***
+     *
+     * @param key
+     * @return
+     */
+    public DiskLruCache.Snapshot get(String key){
+        if (key != null){
+            try {
+                DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
+                if (snapshot != null){
+                    return snapshot;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return cacheKey;
+        return null;
     }
 
-    private String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
+    /**
+     * 将缓存记录同步到journal文件中。
+     */
+    public void flushCache() {
+        if (mDiskLruCache != null) {
+            try {
+                mDiskLruCache.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            sb.append(hex);
         }
-        return sb.toString();
     }
 
 
