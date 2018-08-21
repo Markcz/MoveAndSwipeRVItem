@@ -99,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
             if (isNet){
-                mNetAdapter.notifyItemRemoved(position);
                 mUrls.remove(position);
+                mNetAdapter.notifyItemRemoved(position);
+
             }else {
-                mAdapter.notifyItemRemoved(position);
                 mModels.remove(position);
+                mAdapter.notifyItemRemoved(position);
             }
         }
 
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mModels = new ArrayList<>();
-        mUrls = Arrays.asList(BingPicConstant.BING_IMAGE_URLS);
+        mUrls = new ArrayList<>(Arrays.asList(BingPicConstant.BING_IMAGE_URLS));
 
         mAdapter = new ItemAdapter(this, mModels, 2);
 
