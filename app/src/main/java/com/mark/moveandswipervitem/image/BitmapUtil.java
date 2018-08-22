@@ -37,6 +37,31 @@ public class BitmapUtil {
         return BitmapFactory.decodeFile(imagePath, options);
     }
 
+    /***
+     * 本地图片路径
+     * @param bitmap
+     * @param targetWidth
+     * @param targetHeight
+     * @return
+     */
+    public static Bitmap decodeBitmap(Bitmap bitmap, int targetWidth, int targetHeight) {
+        if (bitmap == null) {
+            throw new NullPointerException(TAG + "====传入的Bitmap不能为null");
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,baos);
+        byte[] bytes = baos.toByteArray();
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+        BitmapFactory.decodeByteArray(bytes,0,bytes.length , options);
+        options.inSampleSize = calculateSampleSize(options, targetWidth, targetHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(bytes,0,bytes.length , options);
+    }
+
 
     // TODO: 2018/8/17 待实现
     public static Bitmap decodeStream(InputStream is, int targetWidth, int targetHeight){

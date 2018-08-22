@@ -1,6 +1,7 @@
 package com.mark.moveandswipervitem.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.mark.moveandswipervitem.R;
 import com.mark.moveandswipervitem.bean.ImageModel;
+import com.mark.moveandswipervitem.image.BitmapUtil;
 import com.mark.moveandswipervitem.image.ImageLoader;
 
 import java.util.ArrayList;
@@ -30,32 +32,33 @@ public class ItemNetAdapter extends RecyclerView.Adapter<ItemNetAdapter.ViewHold
     public ItemNetAdapter(Context context, List<String> models, int columns){
         this.mContext = context;
         this.mUrls = models;
-        width = (context.getResources().getDisplayMetrics().widthPixels - 20*columns ) / columns;
+        //width = (context.getResources().getDisplayMetrics().widthPixels - 20*columns ) / columns;
+        width = context.getResources().getDisplayMetrics().widthPixels / columns;
         initHeights();
     }
 
     private void initHeights() {
         for (int i = 0; i < mUrls.size(); i++){
-            mHeights.add((int) (Math.random()*100 + 300));
+            mHeights.add((int) (Math.random()*100 + 400));
         }
 
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_image_item,null));
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_image_net_item,null));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String url = mUrls.get(position);
-
-        int height = mHeights.get(position);
-        ImageLoader.displayRoundImage(url, holder.imageView, width, height, true);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final String url = mUrls.get(position);
+        final int height = mHeights.get(position);
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         layoutParams.width = width;
         layoutParams.height = height;
-        Log.e(TAG,"PATH : " + url);
+        holder.imageView.setLayoutParams(layoutParams);
+        ImageLoader.displayRoundImage(url, holder.imageView, true);
+
     }
 
     @Override

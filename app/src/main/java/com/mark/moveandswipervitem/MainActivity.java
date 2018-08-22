@@ -161,9 +161,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.bottom = 10;
-                outRect.right = 10;
-                outRect.left = 10;
+                outRect.bottom = 0;
+                outRect.right = 0;
+                outRect.left = 0;
+                outRect.top = 0;
             }
         });
         mModels = new ArrayList<>();
@@ -324,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     mRecyclerView.setAdapter(mNetAdapter);
                 }else {
                     mAdapter = new ItemAdapter(this, mModels, 3);
-                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                     mRecyclerView.setAdapter(mAdapter);
                 }
 

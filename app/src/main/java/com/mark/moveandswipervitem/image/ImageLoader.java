@@ -30,7 +30,7 @@ public class ImageLoader {
 
     private static final String TAG = "ImageLoader";
 
-    private static final float CORNER_RADIUS = 10f; //圆角半径
+    private static final float CORNER_RADIUS = 1f; //圆角半径
 
 
     private static Handler mHandler = new Handler(Looper.getMainLooper()); // 线程切换
@@ -81,8 +81,12 @@ public class ImageLoader {
     }
 
 
-    public static void displayRoundImage(final String url, final ImageView imageView, final int w, final int h, boolean fromNet) {
+    public static void displayRoundImage(final String url, final ImageView imageView, boolean fromNet) {
         if (url != null && imageView != null) {
+            final int width = imageView.getLayoutParams().width;
+            final int height = imageView.getLayoutParams().height;
+            Log.e(TAG, "diaplayImageWithNet -- (" + width + "," + height + ")");
+
             imageView.setImageDrawable(new ColorDrawable(Color.GREEN)); // 占位图
             // 从内存缓存中读取
             final String urlKey = hashKeyForDisk(url);
@@ -104,7 +108,7 @@ public class ImageLoader {
                         public void run() {
                             InputStream is = snapshot.getInputStream(0);
                             if (is != null) {
-                                Bitmap temp = BitmapUtil.decodeStream(is, w, h);
+                                Bitmap temp = BitmapUtil.decodeStream(is, width, height);
                                 if (temp != null) {
                                     // 将Bitmap放入内存缓存
                                     LruCacheManager.getInstance().put(urlKey, temp);
@@ -148,7 +152,7 @@ public class ImageLoader {
                                 if (snapshot != null) {
                                     is = snapshot.getInputStream(0);
                                     if (is != null) {
-                                        final Bitmap bitmap = BitmapUtil.decodeStream(is, w, h);
+                                        final Bitmap bitmap = BitmapUtil.decodeStream(is, width, height);
                                         if (bitmap != null) {
                                             LruCacheManager.getInstance().put(urlKey, bitmap);
                                             mHandler.post(new Runnable() {
@@ -262,6 +266,10 @@ public class ImageLoader {
             sb.append(hex);
         }
         return sb.toString();
+    }
+
+    public interface TargetBitmapListener{
+        void onTarget(float radio);
     }
 
 }

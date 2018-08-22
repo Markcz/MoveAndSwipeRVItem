@@ -28,7 +28,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public ItemAdapter(Context context, List<ImageModel> models,int columns){
         this.mContext = context;
         this.mModels = models;
-        width = (context.getResources().getDisplayMetrics().widthPixels - 20*columns ) / columns;
+        //width = (context.getResources().getDisplayMetrics().widthPixels - 20*columns ) / columns;
+        width = context.getResources().getDisplayMetrics().widthPixels / columns;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,6 +47,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         layoutParams.width = width;
         layoutParams.height = height;
+        holder.imageView.setLayoutParams(layoutParams);
 
         ImageLoader.displayRoundImage(model.getImagePath(),holder.imageView,width,height);
 
